@@ -1,6 +1,19 @@
 import type {NextConfig} from 'next';
 
+function normalizeBasePath(value?: string) {
+  if (!value || value === '/') {
+    return undefined;
+  }
+
+  return value.startsWith('/') ? value : `/${value}`;
+}
+
+const basePath = normalizeBasePath(process.env.BASE_URL);
+const assetPrefix = process.env.ASSETS_PREFIX || basePath;
+
 const nextConfig: NextConfig = {
+  ...(basePath ? {basePath} : {}),
+  ...(assetPrefix ? {assetPrefix} : {}),
   reactStrictMode: true,
   eslint: {
     ignoreDuringBuilds: true,
@@ -15,15 +28,14 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'picsum.photos',
         port: '',
-        pathname: '/**', // This allows any path under the hostname
+        pathname: '/**',
       },
     ],
   },
   output: 'standalone',
   transpilePackages: ['motion'],
   webpack: (config, {dev}) => {
-    // HMR is disabled in AI Studio via DISABLE_HMR env var.
-    // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
+    // File watching is disabled to prevent flickering during agent edits.
     if (dev && process.env.DISABLE_HMR === 'true') {
       config.watchOptions = {
         ignored: /.*/,

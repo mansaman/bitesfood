@@ -1,1 +1,14 @@
 @import "tailwindcss";
+
+:root {
+  --font-sans-stack: "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --font-display-stack: Georgia, "Times New Roman", serif;
+}
+
+body {
+  font-family: var(--font-sans-stack);
+}
+
+.font-display {
+  font-family: var(--font-display-stack);
+}
